@@ -1,1 +1,3 @@
-# D3.js Experimentations
+# Javascript Experimentations
+
+Using D3.js, Leaflet, etc.

@@ -1,0 +1,305 @@
+@import url(http://fonts.googleapis.com/css?family=Noto+Sans:400,700);
+
+html, body {
+  margin: 0; 
+  padding: 0;
+  height: 100%;
+  position: relative;
+  z-index: 100;
+}
+
+@font-face {
+  font-family: myFont;
+  src: url("roung.otf");
+}
+
+.spacerdiv {
+  height: 30px;
+}
+
+#homely {
+  font-size: 30px;
+  font-family: myFont;
+}
+
+
+.container {
+  background-color: red;
+  height: 100%;
+  margin: 0; 
+  padding: 0;
+}
+
+
+.map {
+  margin: 0; 
+  padding: 0;
+  background-color: white;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+.header {
+  margin: 0px; 
+  padding: 0px;
+  z-index: 100;
+  background-color: white;
+  height: 30px;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.nav {
+    background-color: white;
+    color: black;
+    padding: 0px;
+    height: 30px;
+    /*margin: 3px;*/
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    top: 0px;
+    right: 50px;
+    display: inline-block;
+}
+
+.updatebtn {
+    background-color: #204e9b;
+    color: white;
+    padding: 2px;
+    height: 30px;
+    width: 90px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    /*display: inline-block;*/
+    /*position: absolute;*/
+    left: 10px;
+    opacity: 1;
+}
+
+.exportbtn {
+    background-color: #87b21a;
+    color: white;
+    padding: 2px;
+    height: 30px;
+    width: 90px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    /*display: inline-block;*/
+    /*position: absolute;*/
+    left: 110px;
+    opacity: 1;
+}
+
+
+/*side navigation menu*/
+
+
+
+.slider {
+  margin: 5px;
+}
+
+.slider label {
+  position: absolute;
+  width: 20px;
+  margin-top: 20px;
+  margin-left: -10px;
+  text-align: center;
+}
+
+/*#EERslider .ui-slider-range { 
+  background: rgb(216,216,216) ;
+}
+#EERslider .ui-slider-handle { 
+  border-color: #204e9b;
+  background: #204e9b;
+  outline: 0;
+}*/
+
+
+
+.slidervalue {
+  border:0; 
+  background-color: rgba(255,255,255,0);
+}
+
+#TTaddress {
+  width: 210px;
+  text-align: right;
+  color: rgba(0, 0, 0, .2);
+  border-color: rgba(0, 0, 0, .2);
+  border-style: solid;
+  border-width: 2px;
+  /*box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.2);;*/
+}
+
+
+/*@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}*/
+
+
+/*EXPORT BUTTON*/
+
+
+ /* Dropdown Button */
+.dropbtn {
+    background-color: white;
+    color: black;
+    padding: 0px;
+    height: 30px;
+    /*margin: 3px;*/
+    /*font-size: 16px;*/
+    border: none;
+    cursor: pointer;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: absolute;
+    top: 0px;
+    right: 120px;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    /*box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);*/
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #fefefe}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    background-color: #fefefe;
+}
+
+/*---CHECKBOXES---*/
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+input[type="checkbox"], input[type="radio"] {
+  position: absolute;
+  left: -9999px;
+}
+
+.side-label {
+  font: 1.3em/1.1 'Noto Sans', sans-serif;
+  display: block;
+  position: relative;
+  margin: 10px 0;
+  padding-left: 23px;
+  cursor: pointer;
+}
+
+.side-label::before, .side-label::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.side-label::before {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #000;  
+}
+
+input:focus + .side-label::before {
+  border-color: #204e9b;
+}
+
+/*block inside checkbox*/
+.side-label::after {
+  display: none;
+  width: 8px;
+  height: 8px;
+  margin: 4px;
+  background-color: #204e9b;
+}
+
+
+input:checked + .side-label::after {
+  display: block;
+}
+
+/*-------------------*/
+
+.sidenav {
+    /*display: none;  don't show until requested */
+    height: calc(100% - 30px); /* calculate height (100% - height of header) */
+    width: 250px;
+    /*position: fixed;*/
+    position: absolute;
+    z-index: 1;
+    top: 30px;
+    right: 0;
+    background-color: rgba(255, 255, 255, .8);
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding-top: 60px;
+    font: 0.6em/1.2 'Noto Sans', sans-serif;
+    margin: 0 auto;
+    padding: 10px 20px 40px;
+}
+
+.sidenav a {
+    text-decoration: none;
+    color: #000;
+    display: block;
+    transition: 0.3s
+}
+
+.sidenav a:hover, .offcanvas a:focus{
+    color: #f1f1f1;
+}
+
+.closebtn {
+  position: absolute;
+  top: 0;
+  right: 15px;
+  font-size: 36px !important;
+  margin-left: 30px;
+}
+
+.filtertype {
+  font: 1.4em/1.1 'Noto Sans', sans-serif;
+  font-weight: bold;
+}
+
+.subfiltertype {
+  font: 1.1em/1.1 'Noto Sans', sans-serif;
+  font-weight: bold;
+}
