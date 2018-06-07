@@ -4,9 +4,15 @@
 
 .links line {
   stroke: #999;
-  stroke-opacity: 0.6;
+  stroke-opacity: 0.5;
 }
 
+/* Decreases opacity of edge */
+.links line:hover {
+  stroke-opacity: .9 !important;
+}
+
+/* Node properties */
 .nodes circle {
   stroke: #fff;
   stroke-width: 1.5px;
@@ -18,8 +24,27 @@
   font-family: Arial, sans-serif;
 }
 
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-top: 3px;
+    padding-bottom: 2px;
+    font: 12px sans-serif;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
 </style>
-<svg width="1100" height="800"></svg>
+
+<div id="id">ID: </div>
+<div id="group">Group:</div>
+<div><svg width="1100" height="800"></svg></div>
+
+
 <script src="d3.v4.min.js"></script>
 <script>
 
@@ -27,7 +52,7 @@ var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
 
-var color = d3.scaleOrdinal(d3.schemeCategory20);
+var color = d3.scaleOrdinal(d3.schemeCategory10);
 
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(function(d) { return d.id; }))
@@ -35,27 +60,63 @@ var simulation = d3.forceSimulation()
                    .distanceMin(30))
     .force("center", d3.forceCenter(width / 2, height / 2));
 
+// Define the div for the tooltip
+var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+// Load data and plot network graph
 d3.json("miserables.json", function(error, graph) {
   if (error) throw error;
 
+  // Edge properties
   var link = svg.append("g")
-      .attr("class", "links")
+    .attr("class", "links")
     .selectAll("line")
     .data(graph.links)
     .enter().append("line")
-      .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+      .attr("stroke-width", function(d) { 
+        return Math.sqrt(d.value)*1.5; // Line width of edge
+      })
+      .on("mouseover", function(d) {
+            div.transition()
+                .duration(200)
+                .style("opacity", .9);
+            div	.html(d.value)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+            })
+      .on("mouseout", function(d) {
+            div.transition()
+                .duration(500)
+                .style("opacity", 0);
+      });  
 
+  // Node properties
   var node = svg.append("g")
       .attr("class", "nodes")
     .selectAll("circle")
     .data(graph.nodes)
     .enter().append("circle")
-      .attr("r", 5)
+      .attr("r", 10)  // Radius of node
       .attr("fill", function(d) { return color(d.group); })
       .call(d3.drag()
           .on("start", dragstarted)
           .on("drag", dragged)
-          .on("end", dragended));
+          .on("end", dragended))
+      .on("mouseover", function(d) {
+            div.transition()
+                .duration(200)
+                .style("opacity", .9);
+            div	.html(d.id)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+            })
+      .on("mouseout", function(d) {
+            div.transition()
+                .duration(500)
+                .style("opacity", 0);
+      });
 
   node.append("title")
       .text(function(d) { return d.id; });
@@ -67,6 +128,18 @@ d3.json("miserables.json", function(error, graph) {
       .enter().append("text")
         .attr("class", "label")
         .text(function(d) { return d.id; });
+
+  // On double click release node from fixed position.
+  node.on("dblclick", function(d,i) {
+      d.fx = null;
+  	  d.fy = null;
+    });
+
+  // On single click update details of node
+  node.on('click', function(d, i) {
+	  document.getElementById("id").innerHTML = "ID: " + d.id;
+	  document.getElementById("group").innerHTML = "Group: " + d.group;
+	});      
 
   simulation
       .nodes(graph.nodes)
@@ -81,14 +154,12 @@ d3.json("miserables.json", function(error, graph) {
         .attr("y1", function(d) { return d.source.y; })
         .attr("x2", function(d) { return d.target.x; })
         .attr("y2", function(d) { return d.target.y; });
-
     node
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
     label
         .attr("x", function(d) { return d.x+6; })
         .attr("y", function (d) { return d.y+3; });
-        
   }
 });
 
@@ -105,9 +176,12 @@ function dragged(d) {
 
 function dragended(d) {
   if (!d3.event.active) simulation.alphaTarget(0);
-  d.fx = null;
-  d.fy = null;
+}
+
+function dblclick(d) {
+  console.log(d.fixed);
+  d.fixed = false;
+  console.log(d.fixed);
 }
 
 </script>
-
