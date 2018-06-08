@@ -6,7 +6,7 @@
 /* Edge properties */
 .links line {
   stroke: #999;
-  stroke-opacity: 0.5;
+  stroke-opacity: 0.3;
 }
 
 /* Decreases opacity of edge */
@@ -23,7 +23,7 @@
 /* Label properties */
 .labels text {
   fill: #333;
-  font-size: 10px;
+  font-size: 11px;
   font-family: Arial, sans-serif;
 }
 
@@ -36,7 +36,8 @@ div.tooltip {
     padding-top: 3px;
     padding-bottom: 2px;
     font: 12px sans-serif;
-    background: lightsteelblue;
+    color: #5E6666;
+    background: lightgray;
     border: 0px;
     border-radius: 8px;
     pointer-events: none;
@@ -61,15 +62,24 @@ var svg = d3.select("svg"),
     height = +svg.attr("height");
 
 // Get colour range
-var color = d3.scaleOrdinal()
-	.domain(5)
-	.range(['red', 'blue', 'green', 'yellow', 'orange']);
+//var color = d3.scaleOrdinal()
+	//.domain([5])
+    //.range(['#1F2605', '#1F6521', '#53900F', '#A4A71E', '#D6CE15']);  // Greens
+    //.range(['#026670', '#96B1B4', '#9fedd7', '#C9F5E9', '#fef9c7', '#fce181', '#EDEAE5']);  // Blues/Yellow
+    //.range(['#b2d8d8', '#66b2b2', '#008080', '#006666', '#004c4c']);  // Teals
+    //.range(['#f95c7c', '#f9745c', '#f9a35c', '#f9c35c', '#f9e35c']); // http://www.color-hex.com/color-palette/61435
+    //.range(['#fe4880', '#c6427b', '#8e3c77', '#563672', '#1e306e']);  http://www.color-hex.com/color-palette/61300
+    //.range(['#a7cce7', '#89b4d4', '#76a8ce', '#5f92b8', '#4383b2']); // Blues
+    //.range(['#deecfb', '#bedaf7', '#7ab3ef', '#368ce7', '#1666ba']); // Blues
+    //.range(['#f78a43', '#f79a43', '#f7aa43', '#f7ba43', '#f7ca43']); // Oranges
+    //.range(['#faebd7', '#ffe4e1', '#ffc0cb', '#ff7373', '#f6546a']); // Pinks
+    //.range(['#ffb6c1', '#ffd700', '#ffa500', '#ff7373', '#40e0d0', '#468499', '#20b2aa']);
 
-//var color = d3.scaleOrdinal(d3.schemeCategory10);
+var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(function(d) { return d.id; }))
-    .force("charge", d3.forceManyBody().strength(-100).distanceMax(800)
+    .force("charge", d3.forceManyBody().strength(-130).distanceMax(500)
                    .distanceMin(30))
     .force("center", d3.forceCenter(width / 2, height / 2));
 
@@ -103,16 +113,16 @@ d3.json("miserables.json", function(error, graph) {
             div.transition()
                 .duration(500)
                 .style("opacity", 0);
-      });  
+      }); 
 
   // Node properties
   var node = svg.append("g")
-      .attr("class", "nodes")
+    .attr("class", "nodes")
     .selectAll("circle")
     .data(graph.nodes)
     .enter().append("circle")
       .attr("r", radius)  // Radius of node
-      .attr("fill", function(d) { return color(d.group); })
+      .attr("fill", function(d) { console.log(d.properties); return color(d.group); })
       .call(d3.drag()
           .on("start", dragstarted)
           .on("drag", dragged)
@@ -135,6 +145,8 @@ d3.json("miserables.json", function(error, graph) {
   // node.append("title")
   //     .text(function(d) { return d.id; });
 
+  console.log(graph.nodes);
+
   var label = svg.append("g")
       .attr("class", "labels")
       .selectAll("text")
@@ -147,13 +159,13 @@ d3.json("miserables.json", function(error, graph) {
   node.on("dblclick", function(d,i) {
       d.fx = null;
   	  d.fy = null;
-    });
+  	});
 
   // On single click update details of node
   node.on('click', function(d, i) {
 	  document.getElementById("id").innerHTML = "ID: " + d.id;
 	  document.getElementById("group").innerHTML = "Group: " + d.group;
-	});      
+	});    
 
   simulation
       .nodes(graph.nodes)
@@ -167,14 +179,15 @@ d3.json("miserables.json", function(error, graph) {
     node.attr("cx", function(d) { return d.x = Math.max(radius, Math.min(width - radius, d.x)); })
         .attr("cy", function(d) { return d.y = Math.max(radius, Math.min(height - radius, d.y)); });
 
+    // Link location between nodes
     link.attr("x1", function(d) { return d.source.x; })
         .attr("y1", function(d) { return d.source.y; })
         .attr("x2", function(d) { return d.target.x; })
         .attr("y2", function(d) { return d.target.y; });
 
-    label
-        .attr("x", function(d) { return d.x+6; })
-        .attr("y", function (d) { return d.y+3; });
+    // Label location next to node
+    label.attr("x", function(d) { return d.x+11; })
+         .attr("y", function (d) { return d.y+3; });
   }
 });
 
@@ -182,6 +195,7 @@ function dragstarted(d) {
   if (!d3.event.active) simulation.alphaTarget(0.3).restart();
   d.fx = d.x;
   d.fy = d.y;
+
 }
 
 function dragged(d) {
